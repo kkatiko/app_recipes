@@ -1,0 +1,30 @@
+services:
+  recipe-service:
+    build: ./recipe-service
+    ports: ["8001:80"]
+    depends_on:
+      recipe-db:
+        condition: service_healthy
+
+  ingredient-service:
+    build: ./ingredient-service
+    ports: ["8002:80"] 
+    depends_on:
+      ingredient-db:
+        condition: service_healthy
+
+  recipe-db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: recipes
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping"]
+
+  ingredient-db:
+    image: mysql:8.0  
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: ingredients
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping"]
