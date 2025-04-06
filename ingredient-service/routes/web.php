@@ -16,3 +16,10 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->group(['prefix' => 'api'], function () use ($router) {
+    $router->get('ingredients', 'IngredientController@index');
+    $router->post('ingredients', 'IngredientController@store');
+});
+
+$router->delete('ingredients/{id}', 'IngredientController@destroy');
