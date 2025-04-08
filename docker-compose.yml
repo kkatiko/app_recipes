@@ -1,4 +1,5 @@
 services:
+  # Ваши существующие сервисы
   recipe-service:
     build: ./recipe-service
     ports: ["8001:80"]
@@ -8,11 +9,30 @@ services:
 
   ingredient-service:
     build: ./ingredient-service
-    ports: ["8002:80"] 
+    ports: ["8002:80"]
     depends_on:
       ingredient-db:
         condition: service_healthy
+    environment:
+      DB_HOST: ingredient-db
+      DB_DATABASE: ingredients
+      DB_USERNAME: root
+      DB_PASSWORD: secret
 
+  # Новый User Service
+  user-service:
+    build: ./user-service
+    ports: ["8003:80"]
+    depends_on:
+      user-db:
+        condition: service_healthy
+    environment:
+      DB_HOST: user-db  # Важно: используем имя сервиса
+      DB_DATABASE: users_db
+      DB_USERNAME: root
+      DB_PASSWORD: secret
+
+  # Базы данных
   recipe-db:
     image: mysql:8.0
     environment:
@@ -22,9 +42,18 @@ services:
       test: ["CMD", "mysqladmin", "ping"]
 
   ingredient-db:
-    image: mysql:8.0  
+    image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: ingredients
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping"]
+
+  # Новая БД для User Service
+  user-db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: users_db
     healthcheck:
       test: ["CMD", "mysqladmin", "ping"]
