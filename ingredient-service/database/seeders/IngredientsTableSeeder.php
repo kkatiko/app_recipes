@@ -15,8 +15,14 @@ class IngredientsTableSeeder extends Seeder
     {
         Ingredient::insert([
             ['name' => 'Помидор', 'category' => 'Овощи', 'unit' => 'шт'],
+            ['name' => 'Огурец', 'category' => 'Овощи', 'unit' => 'шт'],
+            ['name' => 'Кабачок', 'category' => 'Овощи', 'unit' => 'шт'],
+            ['name' => 'Баклажан', 'category' => 'Овощи', 'unit' => 'шт'],
+            ['name' => 'Морковь', 'category' => 'Овощи', 'unit' => 'шт'],
             ['name' => 'Молоко',  'category' => 'Молочные', 'unit' => 'мл'],
-            ['name' => 'Яйца',    'category' => 'Бакалея', 'unit' => 'шт']
+            ['name' => 'Масло',  'category' => 'Бакалея', 'unit' => 'мл'],
+            ['name' => 'Яйца',    'category' => 'Бакалея', 'unit' => 'шт'],
+            ['name' => 'Спагетти',    'category' => 'Бакалея', 'unit' => 'кг']
         ]);
     }
 }
