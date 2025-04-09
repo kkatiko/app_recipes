@@ -1,4 +1,6 @@
+
 services:
+<<<<<<< Updated upstream
   recipe-service:
     build: ./recipe-service
     ports: ["8001:80"]
@@ -14,12 +16,113 @@ services:
         condition: service_healthy
 
   recipe-db:
+=======
+
+  # API Gateway
+  api-gateway:
+    build: ./api-gateway
+    ports: ["8000:80"]
+    environment:
+      USER_SERVICE_URL: http://user-service
+      INGREDIENT_SERVICE_URL: http://ingredient-service
+      RECIPE_SERVICE_URL: http://recipe-service
+      SEARCH_SERVICE_URL: http://search-service
+    depends_on:
+      - user-service
+      - ingredient-service
+      - recipe-service
+      - search-service
+
+  # User Service
+  user-service:
+    build: ./user-service
+    ports: ["8003:80"]
+    environment:
+      APP_NAME: UserService
+      APP_ENV: local
+      APP_KEY: base64:generated_key_here
+      APP_DEBUG: "true"
+      APP_URL: http://user-service
+      
+      DB_CONNECTION: mysql
+      DB_HOST: user-db
+      DB_PORT: 3306
+      DB_DATABASE: users_db
+      DB_USERNAME: root
+      DB_PASSWORD: secret
+      
+      INGREDIENT_SERVICE_URL: http://ingredient-service
+    depends_on:
+      user-db:
+        condition: service_healthy
+
+  # Ingredient Service
+  ingredient-service:
+    build: ./ingredient-service
+    ports: ["8002:80"]
+    environment:
+      APP_NAME: IngredientService
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://ingredient-service
+      
+      DB_CONNECTION: mysql
+      DB_HOST: ingredient-db
+      DB_PORT: 3306
+      DB_DATABASE: ingredients
+      DB_USERNAME: root
+      DB_PASSWORD: secret
+    depends_on:
+      ingredient-db:
+        condition: service_healthy
+
+
+  # Recipe Service
+  #recipe-service:
+  #  build: ./recipe-service
+  #  ports: ["8001:80"]
+  #  environment:
+  #    APP_NAME: RecipeService
+  #    APP_ENV: local
+  #    APP_DEBUG: "true"
+  #    APP_URL: http://recipe-service
+      
+  #    DB_CONNECTION: mysql
+  #    DB_HOST: recipe-db
+  #    DB_PORT: 3306
+  #    DB_DATABASE: recipes
+  #    DB_USERNAME: root
+  #    DB_PASSWORD: secret
+  #  depends_on:
+  #    recipe-db:
+  #      condition: service_healthy
+
+  # Search Service
+  search-service:
+    build: ./search-service
+    ports:
+      - "8004:80"
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - RECIPE_SERVICE_URL=http://recipe-service
+      - INGREDIENT_SERVICE_URL=http://ingredient-service
+    depends_on:
+      - recipe-service
+      - ingredient-service
+
+  # Databases
+  user-db:
+>>>>>>> Stashed changes
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: recipes
+      MYSQL_DATABASE: users_db
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
 
   ingredient-db:
     image: mysql:8.0  
@@ -27,4 +130,33 @@ services:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: ingredients
     healthcheck:
+<<<<<<< Updated upstream
       test: ["CMD", "mysqladmin", "ping"]
+=======
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+  #recipe-db:
+  #  image: mysql:8.0
+  #  environment:
+  #    MYSQL_ROOT_PASSWORD: secret
+  #    MYSQL_DATABASE: recipes
+  #  healthcheck:
+  #    test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+  #    interval: 5s
+  #    timeout: 10s
+  #    retries: 5
+
+  # Redis для кеширования (опционально)
+  redis:
+    image: redis:alpine
+    ports: ["6379:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+
+networks:
+  default:
+    driver: bridge
+>>>>>>> Stashed changes

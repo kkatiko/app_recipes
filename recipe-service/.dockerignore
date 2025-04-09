@@ -1,4 +1,9 @@
-vendor/
-.env
-.dockerignore
-.git/
+.git
+.idea
+node_modules
+vendor
+*.log
+*.sql
+*.zip
+Dockerfile
+docker-compose.yml

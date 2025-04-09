@@ -112,4 +112,10 @@ $app->router->group([
     require __DIR__.'/../routes/web.php';
 });
 
+<<<<<<< Updated upstream
+=======
+$app->register(\Illuminate\Http\Client\ServiceProvider::class);
+$app->register(Illuminate\Http\HttpServiceProvider::class);
+
+>>>>>>> Stashed changes
 return $app;

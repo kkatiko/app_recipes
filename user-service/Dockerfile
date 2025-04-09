@@ -38,6 +38,3 @@ RUN chown -R www-data:www-data storage bootstrap/cache \
 # 9. Порт и команда
 EXPOSE 9000
 CMD ["php", "-S", "0.0.0.0:80", "-t", "public"]
-
-RUN docker-php-ext-install pdo pdo_mysql
-COPY . /var/www/html

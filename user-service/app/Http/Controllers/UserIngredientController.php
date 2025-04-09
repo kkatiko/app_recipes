@@ -11,6 +11,7 @@ class UserIngredientController extends Controller
     /**
      * Добавление ингредиента пользователю
      */
+    
     public function store(Request $request, $userId)
     {
         $validated = $this->validate($request, [
